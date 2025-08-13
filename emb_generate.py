@@ -12,7 +12,7 @@ sys.path.append('.')
 from stark_qa import load_skb, load_qa
 from stark_qa.tools.api import get_api_embeddings
 from stark_qa.tools.local_encoder import get_llm2vec_embeddings, get_gritlm_embeddings
-from stark.models.base import get_embeddings
+from stark_qa.models.base import get_query_emb
 
 import argparse
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     print(f'Generating embeddings for {len(texts)} texts...')
     for i in tqdm(range(0, len(texts), args.batch_size), desc="Generating embeddings"):
         batch_texts = texts[i:i+args.batch_size]
-        batch_embs = get_embeddings(batch_texts, args.emb_model, **encode_kwargs)
+        batch_embs = get_query_emb(batch_texts, query_id=None, emb_model=args.emb_model, **encode_kwargs)
         batch_embs = batch_embs.view(len(batch_texts), -1).cpu()
             
         batch_indices = indices[i:i+args.batch_size]
